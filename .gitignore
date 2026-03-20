@@ -1,0 +1,26 @@
+# ========================
+# Backend (Spring Boot)
+# ========================
+backend/target/
+backend/.mvn/
+backend/*.iml
+backend/.idea/
+backend/.classpath
+backend/.project
+backend/.settings/
+
+# ========================
+# Frontend (React/Vite)
+# ========================
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# ========================
+# OS / IDE
+# ========================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
