@@ -17,8 +17,8 @@ export default function Books() {
   const fetchBooks = (q = '') => {
     setLoading(true);
     getBooks(q)
-      .then(r => setBooks(r.data))
-      .catch(() => toast.error('Failed to load books'))
+      .then(r => setBooks(Array.isArray(r.data) ? r.data : []))
+      .catch(() => toast.error('Failed to load books — backend may be offline'))
       .finally(() => setLoading(false));
   };
 

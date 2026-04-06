@@ -17,8 +17,8 @@ export default function Members() {
   const fetchMembers = (q = '') => {
     setLoading(true);
     getMembers(q)
-      .then(r => setMembers(r.data))
-      .catch(() => toast.error('Failed to load members'))
+      .then(r => setMembers(Array.isArray(r.data) ? r.data : []))
+      .catch(() => toast.error('Failed to load members — backend may be offline'))
       .finally(() => setLoading(false));
   };
 

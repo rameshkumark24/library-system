@@ -18,15 +18,15 @@ export default function Borrows() {
     const p = f === 'ALL' ? {} : f === 'OVERDUE' ? null : { status: f };
     const call = f === 'OVERDUE' ? getOverdueBorrows() : getBorrows(p);
     call
-      .then(r => setBorrows(r.data))
-      .catch(() => toast.error('Failed to load borrows'))
+      .then(r => setBorrows(Array.isArray(r.data) ? r.data : []))
+      .catch(() => toast.error('Failed to load borrows — backend may be offline'))
       .finally(() => setLoading(false));
   };
 
   useEffect(() => {
     fetchBorrows('ALL');
-    getBooks().then(r => setBooks(r.data)).catch(() => {});
-    getMembers().then(r => setMembers(r.data.filter(m => m.status === 'ACTIVE'))).catch(() => {});
+    getBooks().then(r => setBooks(Array.isArray(r.data) ? r.data : [])).catch(() => {});
+    getMembers().then(r => setMembers(Array.isArray(r.data) ? r.data.filter(m => m.status === 'ACTIVE') : [])).catch(() => {});
   }, []);
 
   const handleFilterChange = (f) => { setFilter(f); fetchBorrows(f); };
