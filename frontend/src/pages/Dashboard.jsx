@@ -8,6 +8,7 @@ export default function Dashboard() {
   const [stats, setStats]     = useState(null);
   const [recent, setRecent]   = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError]     = useState(false);
 
   useEffect(() => {
     Promise.all([getDashboardStats(), getBorrows({ status: 'BORROWED' })])
@@ -15,11 +16,24 @@ export default function Dashboard() {
         setStats(s.data);
         setRecent(b.data.slice(0, 5));
       })
-      .catch(() => toast.error('Failed to load dashboard'))
+      .catch(() => {
+        toast.error('Failed to load dashboard — backend may be offline');
+        setError(true);
+      })
       .finally(() => setLoading(false));
   }, []);
 
   if (loading) return <div className="loader-wrap"><div className="spinner"/><span>Loading...</span></div>;
+
+  if (error || !stats) return (
+    <div className="empty-state" style={{ padding: '80px 20px' }}>
+      <AlertTriangle size={48} style={{ opacity: 0.5, marginBottom: 16, color: 'var(--warning)' }} />
+      <p>Could not connect to backend</p>
+      <small>Make sure the backend server is running and VITE_API_URL is set correctly on Vercel.</small>
+      <br />
+      <button className="btn btn-primary" style={{ marginTop: 20 }} onClick={() => window.location.reload()}>Retry</button>
+    </div>
+  );
 
   const cards = [
     { title: 'Total Books',      value: stats?.totalBooks,      subtitle: `${stats?.availableBooks} available`,    icon: BookOpen,      color: '#4f7cf6', bgColor: 'rgba(79,124,246,0.12)'  },
